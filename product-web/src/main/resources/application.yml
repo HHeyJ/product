@@ -1,0 +1,9 @@
+#服务端口和应用名
+server:
+  port: 8080
+  servlet:
+    context-path: /product
+
+spring:
+  profiles:
+    active: dev

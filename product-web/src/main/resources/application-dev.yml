@@ -1,0 +1,24 @@
+spring:
+  #Redis配置
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password:
+    jedis:
+      pool:
+        max-active: 1000
+        max-wait: 1000
+        max-idle: 300
+        min-idle: 0
+        time-between-eviction-runs: 30000
+    timeout: 1000
+  #MySQL配置
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/inventory?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: root
+    password: 12345678
+##MQ配置
+#mq:
+#  server:
+#    address: 127.0.0.1:6879

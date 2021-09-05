@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <!-- file pattern -->
+    <property name="FILE_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%-5p] [%t] %c %M:%L - %m%n"/>
+    <property name="SIX_FILE_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%-6p] [%t] %c %M:%L - %m%n"/>
+    <property  name="LOG_HOME" value="../logs/product"/>
+
+    <!-- INFO日志 -->
+    <appender name="RollingInfoLogger" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/info.log</file>
+        <encoder>
+            <pattern>${FILE_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>512MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <FileNamePattern>${LOG_HOME}/archive/info.%d{yyyy-MM-dd}-%i.log.gz</FileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印INFO日志 -->
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- WARN日志 -->
+    <appender name="RollingWarnLogger" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/warn.log</file>
+        <encoder>
+            <pattern>${FILE_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>512MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <FileNamePattern>${LOG_HOME}/archive/warn.%d{yyyy-MM-dd}-%i.log.gz</FileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印WARN日志 -->
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- ERROR日志 -->
+    <appender name="RollingErrorLogger" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/error.log</file>
+        <encoder>
+            <pattern>${SIX_FILE_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>512MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <FileNamePattern>${LOG_HOME}/archive/error.%d{yyyy-MM-dd}-%i.log.gz</FileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印ERROR日志 -->
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!--慢SQL日志-->
+    <appender name="MybatisSlowSql" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/slowSQL.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <FileNamePattern>${LOG_HOME}/archive/slowSQL.%d{yyyy-MM-dd}.log.gz</FileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${FILE_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印INFO日志 -->
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+    </appender>
+
+
+    <logger name="com.alibaba.druid.filter.stat.StatFilter" additivity="false" level="info">
+        <appender-ref ref="MybatisSlowSql"/>
+    </logger>
+
+
+
+
+
+
+
+
+
+
+
+    <appender name="AsyncRollingInfoLogger" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold>
+        <appender-ref ref="RollingInfoLogger"/>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <appender name="AsyncRollingWarnLogger" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold>
+        <appender-ref ref="RollingWarnLogger"/>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <appender name="AsyncRollingErrorLogger" class="ch.qos.logback.classic.AsyncAppender">
+        <discardingThreshold>0</discardingThreshold>
+        <appender-ref ref="RollingErrorLogger"/>
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="AsyncRollingInfoLogger"/>
+        <appender-ref ref="AsyncRollingWarnLogger"/>
+        <appender-ref ref="AsyncRollingErrorLogger"/>
+    </root>
+
+</configuration>

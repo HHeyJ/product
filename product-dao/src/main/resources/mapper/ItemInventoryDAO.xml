@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hyq.product.dao.ItemInventoryDAO">
+
+	<resultMap id="BaseResultMap" type="com.hyq.product.DO.ItemInventoryDO">
+		<id property="itemId" column="item_id" /><!--商品Id-->
+		<result property="inventory" column="inventory" /><!--库存-->
+		<result property="version" column="version" /><!--版本号-->
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		`item_id`,`inventory`,`version`
+	</sql>
+
+	<insert id="insert" parameterType="com.hyq.product.DO.ItemInventoryDO" keyProperty="itemId" useGeneratedKeys="true">
+		INSERT INTO
+		`item_inventory`
+		(
+			`inventory`
+		)
+		VALUES
+		(
+			#{inventory}
+		)
+	</insert>
+
+	<insert id="batchInsert">
+		INSERT INTO
+		`item_inventory`
+		(
+			`inventory`
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.inventory})
+		</foreach>
+	</insert>
+
+	<update id="reduceInventory">
+		UPDATE `item_inventory`
+		<set>
+			`version` = `version` + 1,
+			`inventory` = `inventory` - #{inventory}
+		</set>
+		WHERE `item_id` = #{itemId} and `inventory` - #{inventory} >= 0
+	</update>
+
+	<select id="selectById" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM `item_inventory`
+		WHERE `item_id` = #{itemId}
+	</select>
+
+</mapper>
+

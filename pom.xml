@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.2.RELEASE</version>
+    </parent>
+
+    <groupId>com.hyq</groupId>
+    <artifactId>product</artifactId>
+    <packaging>pom</packaging>
+    <version>${projectVersion}</version>
+
+    <modules>
+        <module>product-dao</module>
+        <module>product-core</module>
+        <module>product-web</module>
+    </modules>
+
+    <properties>
+        <!--        系统依赖        -->
+        <projectVersion>1.0.0-SNAPSHOT</projectVersion>
+        <!--        外部依赖        -->
+        <lombokVersion>1.18.4</lombokVersion>
+        <fastJsonVersion>1.2.47</fastJsonVersion>
+        <mybatisVersion>3.4.6</mybatisVersion>
+        <mybatisStarVersion>2.1.0</mybatisStarVersion>
+        <druidVersion>1.1.10</druidVersion>
+        <redissionVersion>3.5.5</redissionVersion>
+        <rocketMQVersion>4.5.2</rocketMQVersion>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- 自身内部依赖 -->
+            <dependency>
+                <groupId>com.hyq</groupId>
+                <artifactId>product-core</artifactId>
+                <version>${projectVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.hyq</groupId>
+                <artifactId>product-dao</artifactId>
+                <version>${projectVersion}</version>
+            </dependency>
+            <!-- Springboot Web模块 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>2.2.2.RELEASE</version>
+            </dependency>
+            <!-- Springboot Mybatis模块 -->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatisStarVersion}</version>
+            </dependency>
+            <!-- LomBok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombokVersion}</version>
+            </dependency>
+            <!-- FastJson -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastJsonVersion}</version>
+            </dependency>
+            <!-- mybatis -->
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${mybatisVersion}</version>
+            </dependency>
+            <!-- Druid连接池 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>${druidVersion}</version>
+            </dependency>
+            <!-- MySQL版本 -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>8.0.15</version>
+            </dependency>
+            <!-- redisson -->
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson</artifactId>
+                <version>${redissionVersion}</version>
+            </dependency>
+            <!-- rocketMQ消息队列 -->
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-client</artifactId>
+                <version>${rocketMQVersion}</version>
+            </dependency>
+            <!-- 加东西写注释 -->
+        </dependencies>
+    </dependencyManagement>
+
+
+
+    <!--  插件打包  -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.hyq.product.ProductApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- 指定maven编译的jdk版本 -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <verbose>true</verbose>
+                    <fork>true</fork>
+                    <!--你的jdk地址-->
+                    <executable>/Library/Java/JavaVirtualMachines/jdk1.8.0_271.jdk/Contents/Home/bin/javac</executable>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
